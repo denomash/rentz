@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
-import { Container, Grid, TextField, Button } from '@material-ui/core';
+import { Container, Grid, TextField, Button, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
+import { DropzoneArea } from 'material-ui-dropzone';
 
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
@@ -68,6 +69,7 @@ const validate = values => {
 };
 
 const App = () => {
+  const [file, setFile] = useState([]);
   const [submitApplication, { data }] = useMutation(SUBMIT_APPLICATION);
   const classes = useStyles();
 
@@ -77,7 +79,8 @@ const App = () => {
       email: '',
       phoneNumber: '',
       address: '',
-      zipCode: ''
+      zipCode: '',
+      file: []
     },
     validate,
     onSubmit: values => {
@@ -159,6 +162,26 @@ const App = () => {
                 value={formik.values.zipCode}
                 onChange={formik.handleChange}
                 variant="outlined"
+              />
+            </div>
+
+            <div>
+              {/* <DropzoneArea
+                // value={formik.values.file}
+                onChange={formik.handleChange}
+              /> */}
+
+              <input
+                type="file"
+                required
+                value={formik.values.file}
+                onChange={formik.handleChange}
+                // onChange={({
+                //   target: {
+                //     validity,
+                //     files: [file]
+                //   }
+                // }) => validity.valid && uploadFile({ variables: { file } })}
               />
             </div>
 

@@ -1,4 +1,10 @@
 export default `
+    type File {
+        filename: String!
+        mimetype: String!
+        encoding: String!
+    }
+
     type Application {
         id: Int!
         name: String!
@@ -6,6 +12,7 @@ export default `
         phoneNumber: String!
         address: String!
         zipCode: String!
+        file: File!
     }
 
     type Query { 
