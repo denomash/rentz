@@ -1,7 +1,36 @@
 import React, { Fragment } from 'react';
+
 import { Container, Grid, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
+
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
+
+const SUBMIT_APPLICATION = gql`
+  mutation submitApplication(
+    $name: String!
+    $email: String!
+    $phoneNumber: String!
+    $address: String!
+    $zipCode: Int!
+  ) {
+    submitApplication(
+      name: $name
+      email: $email
+      phoneNumber: $phoneNumber
+      address: $address
+      zipCode: $zipCode
+    ) {
+      id
+      name
+      email
+      phoneNumber
+      address
+      zipCode
+    }
+  }
+`;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,6 +69,7 @@ const validate = values => {
 };
 
 const App = () => {
+  const [submitApplication, { data }] = useMutation(SUBMIT_APPLICATION);
   const classes = useStyles();
 
   const formik = useFormik({
@@ -52,7 +82,7 @@ const App = () => {
     },
     validate,
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      submitApplication({ variables: { ...values } });
     }
   });
   return (
