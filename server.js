@@ -1,33 +1,37 @@
 import express from 'express';
 import morgan from 'morgan';
-import cors from 'cors';
 import bodyParser from 'body-parser';
-import graphqlHTTP from 'express-graphql';
-import path from 'path';
-// import schema from './schema';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+import { makeExecutableSchema } from 'graphql-tools';
 
+import typeDefs from './schema';
+import resolvers from './resolvers';
+import models from './models';
+
+// Put together a schema
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+});
+
+// Initialize the app
 const app = express();
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
 
-// Allow cros origin
-app.use(cors());
-
+// The GraphQL endpoint
 app.use(
   '/graphql',
-  graphqlHTTP({
-    schema: null,
-    graphiql: true
-  })
+  bodyParser.json(),
+  graphqlExpress({ schema, context: { models } })
 );
 
-app.use(express.static('public'));
+// GraphiQL, a visual editor for queries
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+models.sequelize.sync().then(() => {
+  // Start the server
+  app.listen(3000, () => {
+    console.log('Go to http://localhost:3000/graphiql to run queries!');
+  });
 });
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
