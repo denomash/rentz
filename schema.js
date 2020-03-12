@@ -5,7 +5,7 @@ export default `
         email: String!
         phoneNumber: String!
         address: String!
-        zipCode: Int!
+        zipCode: String!
     }
 
     type Query { 
@@ -15,6 +15,6 @@ export default `
 
 
     type Mutation {
-        submitApplication(name: String!, email: String!, phoneNumber: String!, address: String!, zipCode: Int!): Application!
+        submitApplication(name: String!, email: String!, phoneNumber: String!, address: String!, zipCode: String!): Application!
     }
 `;

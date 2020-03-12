@@ -1,8 +1,13 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import bodyParser from 'body-parser';
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-import { makeExecutableSchema } from 'graphql-tools';
+
+import {
+  ApolloServer,
+  makeExecutableSchema,
+  GraphQLUpload
+} from 'apollo-server';
 
 import typeDefs from './schema';
 import resolvers from './resolvers';
@@ -19,19 +24,17 @@ const app = express();
 
 app.use(morgan('dev'));
 
-// The GraphQL endpoint
-app.use(
-  '/graphql',
-  bodyParser.json(),
-  graphqlExpress({ schema, context: { models } })
-);
-
-// GraphiQL, a visual editor for queries
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+const server = new ApolloServer({
+  cors: {
+    origin: '*', // <- allow request from all domains
+    credentials: true
+  },
+  schema,
+  context: { models }
+});
 
 models.sequelize.sync().then(() => {
-  // Start the server
-  app.listen(3000, () => {
-    console.log('Go to http://localhost:3000/graphiql to run queries!');
+  server.listen().then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`);
   });
 });

@@ -14,7 +14,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      phoneNimber: {
+      phoneNumber: {
         type: Sequelize.STRING
       },
       address: {

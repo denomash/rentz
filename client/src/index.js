@@ -9,7 +9,9 @@ import * as serviceWorker from './serviceWorker';
 import 'typeface-roboto';
 
 // Pass your GraphQL endpoint to uri
-const client = new ApolloClient({ uri: 'http://localhost:8080/graphiql' });
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphiql'
+});
 
 const AppRender = () => (
   <ApolloProvider client={client}>

@@ -13,7 +13,7 @@ const SUBMIT_APPLICATION = gql`
     $email: String!
     $phoneNumber: String!
     $address: String!
-    $zipCode: Int!
+    $zipCode: String!
   ) {
     submitApplication(
       name: $name
@@ -22,7 +22,6 @@ const SUBMIT_APPLICATION = gql`
       address: $address
       zipCode: $zipCode
     ) {
-      id
       name
       email
       phoneNumber
